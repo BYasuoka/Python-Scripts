@@ -188,20 +188,20 @@ def cumulativeRes(folderpath,headers,nameConv,excelName1,excelName2):
     newSheetList = []
     seen = set()
     for i in sheetNamesList:
-        shortname = i[:8]
+        shortname = i[:nameConvL]
         if i[0:nameConvL] not in seen:
             seen.add(shortname)
             newSheetList.append(shortname)
     newSheetList.pop(0)
     print(newSheetList)
-    with pd.ExcelWriter(f'{folderpath}/MECH331_Hardness_Cumulative.xlsx', engine='openpyxl', mode='a') as writer:
+    with pd.ExcelWriter(f'{folderpath}/{excelName2}', engine='openpyxl', mode='a') as writer:
         for iter1 in newSheetList:
             combined_df = pd.DataFrame()
             cumulative_df = pd.DataFrame()
             for iter2 in sheetNamesList:
                 temp_df = excelFile.parse(iter2)
                 #print(temp_df.head)
-                if iter2[:8] == iter1 and headers[0] in temp_df.columns:
+                if iter2[:nameConvL] == iter1 and headers[0] in temp_df.columns:
                     temp_df_filtered = (temp_df[headers])
                     combined_df = pd.concat([combined_df,temp_df_filtered],ignore_index = True)
                     cumulative_df1 = combined_df.groupby(headers[0], as_index=False)[headers[1]].mean()
